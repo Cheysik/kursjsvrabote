@@ -1,17 +1,21 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const tabItem = document.querySelectorAll('.tabheader__item'),tabContent = document.querySelectorAll('.tabcontent'),
+  const tabItem = document.querySelectorAll('.tabheader__item'),
+  tabContent = document.querySelectorAll('.tabcontent'),
   tabItems = document.querySelector('.tabheader__items');
 
 function hideTabContent() { 
 tabContent.forEach(item => {
-  item.style.display = 'none';
+  item.classList.add('hide');
+  item.classList.remove('show', 'fade');
+
 })
 tabItem.forEach(item =>{
     item.classList.remove('tabheader__item_active');
 })
 };
 function showTabContent(i = 0) {
-  tabContent[i].style.display = 'block';
+  tabContent[i].classList.add('show', 'fade');
+  tabContent[i].classList.remove('hide');
   tabItem[i].classList.add('tabheader__item_active');
 }
 hideTabContent();
