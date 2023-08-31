@@ -195,13 +195,19 @@ window.addEventListener('DOMContentLoaded', function() {
         return await res.json();
     };
 
-    getResource('http://localhost:3000/menu')
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price})=> {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container'/* kuda pushim nash kard */).render();
+    //         });
+    //     });
+
+axios.get('http://localhost:3000/menu')
         .then(data => {
-            data.forEach(({img, altimg, title, descr, price})=> {
+            data.data.forEach(({img, altimg, title, descr, price})=> {
                 new MenuCard(img, altimg, title, descr, price, '.menu .container'/* kuda pushim nash kard */).render();
             });
         });
-
 
 
     //Forms
@@ -287,5 +293,65 @@ function showThanksModal(message) {
         closeModal();
     }, 4000);
 }
-});
+
+//slider
+let 	sliderPrev = document.querySelector('.offer__slider-prev'),
+        sliderNext = document.querySelector('.offer__slider-next'),
+		sliderCurrent = document.querySelector('#current'),
+		sliderTotal = document.querySelector('#total'),
+		slide = document.querySelectorAll('.offer__slide');
+
+
+        function hideSliderContent() {
+            slide.forEach(item =>{
+                  item.classList.add('hide');
+                item.classList.remove('show', 'fade');
+            });
+            };
+
+            function showSliderContent(i = 0) {
+                slide[i].classList.add('show', 'fade');
+                slide[i].classList.remove('hide');
+
+            };
+            function lastSlide(i= 0) {
+                slide[i].classList.add('show', 'fade');
+
+            }
+            let slideLenght = slide.length;
+            let sliderCounter = 1;
+            sliderTotal.innerHTML=`0${slideLenght}`;
+            sliderCurrent.innerHTML =`0${sliderCounter}`;
+
+            sliderNext.addEventListener('click', () =>{
+                if(sliderCounter < slideLenght ){
+                hideSliderContent();
+                showSliderContent(sliderCounter++);
+                sliderCurrent.innerHTML =`0${sliderCounter}`;
+                }else{
+                    hideSliderContent();
+                    showSliderContent(0);
+                    sliderCounter = 1;
+                    sliderCurrent.innerHTML =`0${sliderCounter}`;
+                }
+  
+            });
+            sliderPrev.addEventListener('click', () =>{
+
+            if(sliderCounter <= slideLenght && sliderCounter >1 ){
+                hideSliderContent();
+                showSliderContent(--sliderCounter);
+                sliderCurrent.innerHTML =`0${sliderCounter}`;
+            }  else{
+                hideSliderContent();
+                showSliderContent(sliderCounter);
+                sliderCounter= slide.length;
+                sliderCurrent.innerHTML =`0${sliderCounter}`;
+            };
+        });
+            hideSliderContent(); 
+            showSliderContent();
+
+            });
+
 
