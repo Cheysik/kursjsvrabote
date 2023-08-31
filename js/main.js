@@ -185,32 +185,24 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        ".menu .container"
-    ).render();
+    const getResource = async (url) => {
+        const res = await fetch(url);
+        
+        if(!res.ok) { //Для fetch ошибка это если интернета нет и т.п., поэтому мы прописываем если не получили ответ от сервера (404 и т.п.) в ручную ошибку
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
 
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        14,
-        ".menu .container"
-    ).render();
+        return await res.json();
+    };
 
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        21,
-        ".menu .container"
-    ).render();
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price})=> {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container'/* kuda pushim nash kard */).render();
+            });
+        });
+
+
 
     //Forms
 
@@ -222,11 +214,25 @@ window.addEventListener('DOMContentLoaded', function() {
         failure: 'Что-то пошло не так...'
     };
 
+
+
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
+
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers:{
+                'Content-type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    };
     
-    function postData(form) {
+    function bindPostData(form) {
         form.addEventListener('submit', (e)=> {
             e.preventDefault();
 
@@ -242,21 +248,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
             const formData = new FormData(form); //vsegda ukazyvat' atribut name v inputah v HTML(na stranice)
             
-            const object = {};
-            formData.forEach(function(value, key){
-                object[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries())); // Берем formData которая собрала данные с формы, превращаем ее в массив массивов, потом превращаем ее в классичемский объект, а потом в JSON
 
 
-            fetch('server.php', {
-                method: "POST",
-                headers:{
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-
-            })
-            .then(data => data.text())
+            postData('http://localhost:3000/requests',json )
             .then(data => {
                  console.log(data);
                  showThanksModal(message.success);
@@ -292,5 +287,5 @@ function showThanksModal(message) {
         closeModal();
     }, 4000);
 }
-
 });
+
