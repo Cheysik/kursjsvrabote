@@ -294,13 +294,60 @@ function showThanksModal(message) {
     }, 4000);
 }
 
-//slider
+//Slider
+
+// const slides = document.querySelectorAll('.offer__slide'),
+//         prev = document.querySelector('.offer__slider-prev'),
+//         next = document.querySelector('.offer__slider-next'),
+//         total = document.querySelector('#total'),
+//         current = document.querySelector('#current');
+//         let slideIndex = 1;
+
+//     showSlides(slideIndex);
+
+//         if(slides.length< 10){
+//             total.textContent = `0${slides.length}`;
+//         }else{
+//             total.textContent = slides.length;
+//         }
+//         function showSlides(n) {
+//             if ( n > slides.length){
+//                 slideIndex = 1;
+//             }
+//             if (n < 1) {
+//                 slideIndex = slides.length;
+//             }
+//             slides.forEach(item => item.style.display = 'none');
+
+//             slides[slideIndex - 1].style.display = 'block';
+
+//             if(slides.length< 10){
+//                 current.textContent = `0${slideIndex}`;
+//             }else{
+//                 current.textContent = slideIndex;
+//             }
+//         }
+
+//         function plusSlides(n) {
+//             showSlides(slideIndex += n);
+//         }
+
+//         prev.addEventListener('click', ()=>{
+//             plusSlides(-1);
+//         });
+//         next.addEventListener('click', ()=>{
+//             plusSlides(1);
+//         });
+
 let 	sliderPrev = document.querySelector('.offer__slider-prev'),
         sliderNext = document.querySelector('.offer__slider-next'),
 		sliderCurrent = document.querySelector('#current'),
 		sliderTotal = document.querySelector('#total'),
 		slide = document.querySelectorAll('.offer__slide');
-
+        let slideLenght = slide.length;
+        let sliderCounter = 1;
+        sliderTotal.innerHTML=`0${slideLenght}`;
+        sliderCurrent.innerHTML =`0${sliderCounter}`;
 
         function hideSliderContent() {
             slide.forEach(item =>{
@@ -314,14 +361,10 @@ let 	sliderPrev = document.querySelector('.offer__slider-prev'),
                 slide[i].classList.remove('hide');
 
             };
-            function lastSlide(i= 0) {
+            function lastSlide(i = slide.length - 1){
                 slide[i].classList.add('show', 'fade');
-
-            }
-            let slideLenght = slide.length;
-            let sliderCounter = 1;
-            sliderTotal.innerHTML=`0${slideLenght}`;
-            sliderCurrent.innerHTML =`0${sliderCounter}`;
+                slide[i].classList.remove('hide');
+            };
 
             sliderNext.addEventListener('click', () =>{
                 if(sliderCounter < slideLenght ){
@@ -340,13 +383,13 @@ let 	sliderPrev = document.querySelector('.offer__slider-prev'),
 
             if(sliderCounter <= slideLenght && sliderCounter >1 ){
                 hideSliderContent();
-                showSliderContent(--sliderCounter);
+                showSliderContent(--sliderCounter-1);
                 sliderCurrent.innerHTML =`0${sliderCounter}`;
             }  else{
                 hideSliderContent();
-                showSliderContent(sliderCounter);
                 sliderCounter= slide.length;
                 sliderCurrent.innerHTML =`0${sliderCounter}`;
+                lastSlide();
             };
         });
             hideSliderContent(); 
