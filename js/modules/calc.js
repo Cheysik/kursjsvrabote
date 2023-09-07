@@ -112,5 +112,5 @@ function calc() {
   getDynamicInformation('#age');
 
 }
-
-module.exports = calc;
+export default calc; //по стандарту es6
+// module.exports = calc; // commonJS (через обычный JS ?), на фронтенде обычно по стандарту es6 (да и наверное везде ?)
